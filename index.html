@@ -1,15 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Facebook Login Fixed</title>
- 
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Facebook Login & Show Token</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    #token {
+      margin-top: 20px;
+      padding: 10px;
+      background: #f0f0f0;
+      display: inline-block;
+      word-break: break-all;
+    }
+  </style>
 </head>
 <body>
-<div class="fb-login-button" data-width="100" data-size="" data-button-type="" data-layout="" data-auto-logout-link="false" data-use-continue-as="false"></div>
- <div id="fb-root"></div>
-<script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v22.0&appId=540782648891378"></script>
+
+  <h1>Đăng nhập Facebook và hiển thị Token</h1>
+
+  <!-- Nơi SDK chèn XFBML button -->
+  <div id="fb-root"></div>
+  <div class="fb-login-button"
+       data-width=""
+       data-size="large"
+       data-button-type="login_with"
+       data-layout="default"
+       data-auto-logout-link="false"
+       data-use-continue-as="false"
+       onlogin="checkLoginState();">
+  </div>
+
+  <!-- Nơi hiển thị token -->
+  <div id="token">Chưa có token</div>
+
+  <script>
+    // Khi SDK load xong, khởi tạo (nếu bạn muốn tự gọi init)
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '540782648891378',
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v22.0'
+      });
+    };
+
+    // Hàm lấy trạng thái đăng nhập và hiển thị token
+    function checkLoginState() {
+      FB.getLoginStatus(function(response) {
+        if (response.status === 'connected') {
+          const token = response.authResponse.accessToken;
+          document.getElementById('token').innerText = 'Access Token: ' + token;
+        } else {
+          document.getElementById('token').innerText = 'Đăng nhập thất bại hoặc chưa cấp phép.';
+        }
+      });
+    }
+
+    // Load SDK bất đồng bộ
+    (function(d, s, id){
+      if (d.getElementById(id)) return;
+      const js = d.createElement(s); js.id = id;
+      js.src = "https://connect.facebook.net/vi_VN/sdk.js";
+      js.async = true;
+      js.defer = true;
+      d.getElementsByTagName('head')[0].appendChild(js);
+    }(document, 'script', 'facebook-jssdk'));
+  </script>
 
 </body>
 </html>
