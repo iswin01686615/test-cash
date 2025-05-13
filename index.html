@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Facebook Login Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 100px;
+        }
+        #loginBtn {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #1877f2;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #loginBtn:hover {
+            background-color: #145dbf;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Đăng Nhập Facebook</h1>
+    <button id="loginBtn" onclick="loginWithFacebook()">Đăng nhập bằng Facebook</button>
+
+    <script>
+        // Load Facebook SDK
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId      : 'YOUR_APP_ID', // 🔥 Thay bằng App ID thật
+                cookie     : true,
+                xfbml      : true,
+                version    : 'v19.0'
+            });
+        };
+
+        (function(d, s, id){
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "https://connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+        function loginWithFacebook() {
+            FB.login(function(response) {
+                if (response.authResponse) {
+                    FB.api('/me', {fields: 'name,email'}, function(response) {
+                        alert(`Xin chào, ${response.name} (${response.email})`);
+                    });
+                } else {
+                    alert('Bạn chưa cho phép đăng nhập!');
+                }
+            }, {scope: 'public_profile,email'});
+        }
+    </script>
+
+</body>
+</html>
